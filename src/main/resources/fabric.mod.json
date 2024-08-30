@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "card_clash",
+  "version": "${version}",
+  "name": "Card Clash",
+  "description": "",
+  "authors": ["Bingley"],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/card_clash/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "dev.bingley.client.card_clashClient"
+    ],
+    "main": [
+      "dev.bingley.card_clash"
+    ]
+  },
+  "mixins": [
+    "card_clash.mixins.json",
+    {
+      "config": "card_clash.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-language-kotlin": ">=${kotlin_loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
