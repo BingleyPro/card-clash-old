@@ -2,6 +2,7 @@ package dev.bingley.commands
 
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.context.CommandContext
+import dev.bingley.BattleManager
 import dev.bingley.CardClash
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.minecraft.command.argument.EntityArgumentType
@@ -33,11 +34,24 @@ object ForceBattleCmd {
         val arena = IntegerArgumentType.getInteger(context, "arena")
 
         val battlemanager = CardClash.battleManager
-        battlemanager.startBattle(player1.uuid, player2.uuid, arena)
+        val result = battlemanager.startBattle(player1.uuid, player2.uuid, arena)
 
-        player1.sendMessage(Text.literal("You are now in a battle with ${player2.name.string} in arena $arena"))
-        player2.sendMessage(Text.literal("You are now in a battle with ${player1.name.string} in arena $arena"))
+        when (result) {
+            BattleManager.BattleStartResult.SUCCESS -> {
+                player1.sendMessage(Text.literal("You are now in a battle with ${player2.name.string} in arena $arena"))
+                player2.sendMessage(Text.literal("You are now in a battle with ${player1.name.string} in arena $arena"))
+                return 1 // Success
+            }
 
-        return 1 // Success
+            BattleManager.BattleStartResult.SAME_PLAYER_ERROR -> {
+                context.source.sendError(Text.literal("Error: The same player cannot battle themself!"))
+                return 0 // Failed
+            }
+
+            BattleManager.BattleStartResult.PLAYER_IN_BATTLE_ERROR -> {
+                context.source.sendError(Text.literal("Error: One or both of the players are already in a battle."))
+                return 0 // Failed
+            }
+        }
     }
 }

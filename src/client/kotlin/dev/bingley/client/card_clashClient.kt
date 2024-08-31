@@ -2,7 +2,7 @@ package dev.bingley.client
 
 import net.fabricmc.api.ClientModInitializer
 
-class card_clashClient : ClientModInitializer {
+class CardClashClient : ClientModInitializer {
 
     override fun onInitializeClient() {
     }
